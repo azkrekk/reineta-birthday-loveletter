@@ -27,11 +27,13 @@
       padding: 2rem;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 1s ease;
+      transition: opacity 1s ease, transform 1s ease;
+      transform: scale(0.98);
     }
     .container.active {
       opacity: 1;
       pointer-events: auto;
+      transform: scale(1);
     }
     h1 {
       font-size: 2.5rem;
@@ -44,14 +46,19 @@
       font-size: 1rem;
       color: white;
       cursor: pointer;
-      margin-top: 1rem;
-      transition: background-color 0.3s ease;
+      margin: 0.5rem;
+      transition: background-color 0.3s ease, transform 0.2s;
     }
     .btn:hover {
       background-color: #ff94c6;
+      transform: scale(1.05);
     }
     .navigation {
-      margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
     }
     .photo {
       max-width: 90vw;
@@ -59,25 +66,6 @@
       border-radius: 20px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       margin: 1rem 0;
-    }
-    .flower, .heart {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      background-size: cover;
-      opacity: 0.7;
-      animation: float 10s infinite ease-in-out;
-      pointer-events: none;
-    }
-    .heart {
-      background-image: url('https://cdn-icons-png.flaticon.com/512/833/833472.png');
-      width: 30px;
-      height: 30px;
-    }
-    @keyframes float {
-      0% {transform: translateY(0) rotate(0deg);}
-      50% {transform: translateY(-30px) rotate(180deg);}
-      100% {transform: translateY(0) rotate(360deg);}
     }
     .final-message {
       position: fixed;
@@ -98,99 +86,145 @@
       from {opacity: 0; transform: translate(-50%, -60%);}
       to {opacity: 1; transform: translate(-50%, -50%);}
     }
-    audio {
-      display: none;
+    #audioControl {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 20;
+      background-color: #ffaad4;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .flower-float {
+      position: fixed;
+      width: 50px;
+      height: 50px;
+      background-image: url('https://pngimg.com/uploads/flower/flower_PNG130.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      animation: float 10s infinite;
+      z-index: 1;
+    }
+    @keyframes float {
+      0% {transform: translateY(100vh) translateX(0); opacity: 0;}
+      50% {opacity: 1;}
+      100% {transform: translateY(-100vh) translateX(20vw); opacity: 0;}
+    }
+    .hearts {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .heart-btn {
+      font-size: 2rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .heart-btn:hover {
+      transform: scale(1.2);
     }
   </style>
 </head>
 <body>
-  <audio autoplay loop>
-    <source src="https://cdn.pixabay.com/audio/2022/10/16/audio_c2d2c8db67.mp3" type="audio/mp3">
-    Your browser does not support the audio element.
+  <audio id="bgm" loop autoplay>
+    <source src="https://dl.sndup.net/7mzt/romantic_piano.mp3" type="audio/mp3">
   </audio>
+  <button id="audioControl" onclick="toggleAudio()">🔊</button>
 
-  <div class="container active" id="page1">
-    <h1>Happy 24th Birthday, Reineta Sayangku Pujaan Hatiku selamanya! 🎂</h1>
-    <img class="photo" src="https://i.imgur.com/LRRRYuT.jpg" alt="Reineta" />
-    <button class="btn" onclick="nextPage()">Mulai 💌</button>
-  </div>
+  <div class="flower-float" style="left:10%; animation-delay: 0s;"></div>
+  <div class="flower-float" style="left:40%; animation-delay: 3s;"></div>
+  <div class="flower-float" style="left:70%; animation-delay: 5s;"></div>
 
-  <div class="container" id="page2">
-    <p>Hari ini bukan cuma spesial karena tanggalnya, tapi karena dunia pernah menghadiahkan seseorang yang paling aku cintai... kamu 💖</p>
-    <img class="photo" src="https://i.imgur.com/SKJgNmz.jpg" alt="Azkiya & Reineta" />
+  <div id="page1" class="container active">
+    <h1>Happy 24th Birthday, Reineta Sayangku Pujaan Hatiku Selamanya! 🎂</h1>
+    <img src="https://i.imgur.com/LRRRYuT.jpeg" class="photo" alt="photo1"/>
+    <p>
+      Aku nulis ini buat kamu... buat seseorang yang senyumnya bikin dunia jadi lebih manis,
+      buat seseorang yang hadirnya selalu jadi tempat pulang paling tenang.
+    </p>
     <div class="navigation">
-      <button class="btn" onclick="prevPage()">Back</button>
-      <button class="btn" onclick="nextPage()">Next</button>
+      <button class="btn" onclick="nextPage()">Next ➡️</button>
     </div>
   </div>
 
-  <div class="container" id="page3">
-    <p>Terima kasih sudah selalu hadir dengan senyuman paling manis, candaan paling gemas, dan cinta paling hangat. Kamu adalah rumah terindahku. 💗</p>
-    <img class="photo" src="https://i.imgur.com/DZKcx2j.jpg" alt="Mirror Selfie" />
+  <div id="page2" class="container">
+    <h1>Puisi untukmu ✨</h1>
+    <p>
+      kamu adalah hujan yang jatuh perlahan...<br>
+      tak memaksa, tapi menenangkan. <br>
+      kamu seperti wangi tanah setelah hujan, <br>
+      meneduhkan, menghangatkan, menyamankan. <br><br>
+      bersamamu, segalanya terasa cukup. <br>
+      tak perlu megah, tak perlu sorotan.<br>
+      hanya kamu, cukup kamu. dan hatiku utuh.
+    </p>
+    <img src="https://i.imgur.com/SKJgNmz.jpeg" class="photo" alt="photo2"/>
     <div class="navigation">
-      <button class="btn" onclick="prevPage()">Back</button>
-      <button class="btn" onclick="nextPage()">Next</button>
+      <button class="btn" onclick="prevPage()">⬅️ Back</button>
+      <button class="btn" onclick="nextPage()">Next ➡️</button>
     </div>
   </div>
 
-  <div class="container" id="page4">
-    <h1>I love you, always 🌸</h1>
-    <p>Dari: Raden Mas Azkiya sing Bagus dewe lan tresnone mboten berkurang selamanya 😘</p>
-    <button class="btn" onclick="showSurprise()">🎁 Surprise</button>
+  <div id="page3" class="container">
+    <h1>🌸 Surprise untukmu 🌸</h1>
+    <p>Tekan tombol ini yaa, sayangkuuu~ 😍</p>
+    <img src="https://i.imgur.com/DZKcx2j.jpeg" class="photo" alt="photo3"/>
+    <div class="navigation">
+      <button class="btn" onclick="prevPage()">⬅️ Back</button>
+      <button class="btn" onclick="showFinalMessage()">🎁 Klik Surprise</button>
+      <button class="btn" onclick="nextPage()">Next ➡️</button>
+    </div>
   </div>
 
-  <div class="final-message" id="finalMessage">
-    You’re my everything 💘<br>And I’ll love you endlessly.
+  <div id="page4" class="container">
+    <h1>🎮 Mini Game Lucu</h1>
+    <p>Di antara hati-hati ini, mana yang menyimpan cintaku? 💘</p>
+    <div class="hearts">
+      <button class="heart-btn" onclick="checkHeart(1)">💔</button>
+      <button class="heart-btn" onclick="checkHeart(2)">❤️</button>
+      <button class="heart-btn" onclick="checkHeart(3)">💔</button>
+    </div>
+    <p id="gameResult"></p>
+    <div class="navigation">
+      <button class="btn" onclick="prevPage()">⬅️ Back</button>
+    </div>
   </div>
+
+  <div id="finalMessage" class="final-message">I love you, always 🌸</div>
 
   <script>
     let currentPage = 1;
-    const totalPages = 4;
-
-    function showPage(pageNumber) {
-      for (let i = 1; i <= totalPages; i++) {
-        const page = document.getElementById(`page${i}`);
-        if (i === pageNumber) {
-          page.classList.add('active');
-        } else {
-          page.classList.remove('active');
-        }
-      }
-    }
-
     function nextPage() {
-      if (currentPage < totalPages) {
-        currentPage++;
-        showPage(currentPage);
-      }
+      document.getElementById(`page${currentPage}`).classList.remove('active');
+      currentPage++;
+      document.getElementById(`page${currentPage}`).classList.add('active');
     }
-
     function prevPage() {
-      if (currentPage > 1) {
-        currentPage--;
-        showPage(currentPage);
-      }
+      document.getElementById(`page${currentPage}`).classList.remove('active');
+      currentPage--;
+      document.getElementById(`page${currentPage}`).classList.add('active');
     }
-
-    function showSurprise() {
-      for (let i = 0; i < 30; i++) {
-        const flower = document.createElement('div');
-        flower.classList.add('flower');
-        flower.style.left = Math.random() * 100 + 'vw';
-        flower.style.top = Math.random() * 100 + 'vh';
-        flower.style.backgroundImage = "url('https://pngimg.com/uploads/flower/flower_PNG102346.png')";
-        flower.style.animationDuration = (5 + Math.random() * 10) + 's';
-        document.body.appendChild(flower);
-
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.top = Math.random() * 100 + 'vh';
-        heart.style.animationDuration = (3 + Math.random() * 5) + 's';
-        document.body.appendChild(heart);
-      }
-
+    function toggleAudio() {
+      const audio = document.getElementById('bgm');
+      if (audio.paused) audio.play();
+      else audio.pause();
+    }
+    function showFinalMessage() {
       document.getElementById('finalMessage').style.display = 'block';
+    }
+    function checkHeart(choice) {
+      const result = document.getElementById('gameResult');
+      if (choice === 2) {
+        result.innerHTML = "Yay! Kamu nemu cintaku! 🥰💖";
+      } else {
+        result.innerHTML = "hihh, kok kamu milih ituuu sihhhh huftttt";
+      }
     }
   </script>
 </body>
